@@ -10,6 +10,14 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar sticky-top navbar-light bg-white shadow-sm mb-3">
+      <a class="navbar-brand" href="#">
+        <%= image_tag('twitter.svg', width: 30, height: 30) %>
+        Tweet manager
+      </a>
+    </nav>
+    <div class="container text-center">
+      <%= yield %>
+    </div>
   </body>
 </html>
