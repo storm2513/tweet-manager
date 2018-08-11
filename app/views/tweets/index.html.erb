@@ -3,7 +3,7 @@
     <h1 class="display-4"> To access this section you need to <%= link_to 'authenticate', login_path %> 😉</h1>
   </div>
 <% else %>
-  <%= form_for @tweet, url: { action: :create } do |tweet_form| %>
+  <%= form_for @tweet, url: { action: :create }, multipart: true do |tweet_form| %>
     <% if @tweet.errors.any? %>
       <div class="alert alert-danger text-left">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -22,6 +22,10 @@
     <div class="d-flex justify-content-center">
       <div class="p-2">
         <%= tweet_form.text_area :body, maxlength: 280, cols: 50, rows: 6, placeholder: "What's happening?", class: 'form-control' %>
+        <span class="btn btn-large btn-primary btn-file w-100">
+          Upload image
+          <%= tweet_form.file_field :image, accept: 'image/png,image/gif,image/jpeg' %>
+        </span>
       </div>
       <div class="align-self-center">
         <%= tweet_form.submit 'Tweet!', class: 'btn btn-success' %>
@@ -34,10 +38,13 @@
       <button type="button" class="close" aria-label="Close">
         <%= link_to '<span aria-hidden="true" class="float-right mr-1">&times;</span>'.html_safe, delete_tweet_path(tweet), method: :delete, data: { confirm: 'Are you sure?' } %>
       </button>
-      <div class="card-body">
+      <div class="card-body pt-0">
         <div class="card-text">
           <%= tweet.body %>
         </div>
+        <% if tweet.image %>
+          <%= image_tag(tweet.image, class: 'card-img-bottom mt-2') %>
+        <% end %>
         <div class="float-right mt-2">
           <span class="text-secondary"><%= tweet.created_at.in_time_zone(3).strftime('%d.%m.%Y %H:%M') %></span>
           <%= link_to 'View', tweet_path(tweet.tid), class: 'card-link pl-4', target: :_blank %>

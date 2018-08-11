@@ -6,8 +6,10 @@ class TweetsController < ApplicationController
 
   def create
     @tweet.user_id = current_user.id
+    image = nil
+    image = File.new(params[:tweet][:image].tempfile) if params[:tweet][:image]
     if @tweet.valid?
-      post_tweet(@tweet)
+      post_tweet(@tweet, image)
     else
       flash[:error] = 'Tweet is not valid!'
       render :index
@@ -41,8 +43,13 @@ class TweetsController < ApplicationController
     @tweets = current_user.tweets.order(created_at: :desc)
   end
 
-  def post_tweet(tweet)
-    posted = @client.update(tweet.body)
+  def post_tweet(tweet, image)
+    if image
+      posted = @client.update_with_media(tweet.body, image)
+      tweet.image = posted.media[0].media_url.to_s
+    else
+      posted = @client.update(tweet.body)
+    end
     tweet.tid = posted.id
     tweet.save
     flash[:success] = 'Tweet was successfully published!'
