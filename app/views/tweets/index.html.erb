@@ -1,2 +1,8 @@
-<h1>Tweets#index</h1>
-<p>Find me in app/views/tweets/index.html.erb</p>
+<% if !current_user %>
+  <div class="jumbotron">
+    <h1 class="display-4"> To access this section you need to <%= link_to 'authenticate', login_path %> 😉</h1>
+  </div>
+<% else %>
+  <h1>Tweets#index</h1>
+  <p>Find me in app/views/tweets/index.html.erb</p>
+<% end %>
